@@ -2,9 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Kicau Mania Chaos</title>
-
   <style>
     * {
       margin: 0;
@@ -126,38 +124,19 @@
       z-index: 100;
     }
 
-    /* =======================
-       MOBILE OPTIMIZATION
-       (tanpa ubah logic JS)
-    ======================== */
-    @media (max-width: 600px) {
+    /* MOBILE FIX */
+    @media (max-width: 700px) {
+      .text {
+        font-size: 22px;
+      }
 
       button#btn {
-        font-size: 16px;
-        padding: 12px 18px;
-        min-width: 110px;
-      }
-
-      .text {
-        font-size: 20px;
-        white-space: normal;
-        text-align: center;
-      }
-
-      video {
-        width: 92vw;
-        border-radius: 12px;
-      }
-
-      .credit {
-        font-size: 10px;
-        right: 6px;
-        bottom: 6px;
+        font-size: 18px;
+        padding: 12px 20px;
       }
     }
   </style>
 </head>
-
 <body>
 
   <button id="btn">Klik Aku 😏</button>
@@ -167,115 +146,143 @@
   <div id="flash"></div>
   <div class="credit">Created by: ribiamalia</div>
 
-<script>
-  const btn = document.getElementById('btn');
-  const video = document.getElementById('video');
-  const scream = document.getElementById('scream');
-  const flash = document.getElementById('flash');
+  <script>
+    const btn = document.getElementById('btn');
+    const video = document.getElementById('video');
+    const scream = document.getElementById('scream');
+    const flash = document.getElementById('flash');
 
-  let moveCount = 0;
+    let moveCount = 0;
 
-  btn.style.left = '50%';
-  btn.style.top = '50%';
-  btn.style.transform = 'translate(-50%, -50%)';
+    // Munculkan tombol di tengah dulu
+    btn.style.left = '50%';
+    btn.style.top = '50%';
+    btn.style.transform = 'translate(-50%, -50%)';
 
-  btn.addEventListener('mouseover', () => {
-    if (moveCount < 6) {
-      moveButton();
-      moveCount++;
+    btn.addEventListener('mouseover', () => {
+      if (moveCount < 6) {
+        moveButton();
+        moveCount++;
+      }
+    });
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (moveCount < 6) {
+        moveButton();
+        moveCount++;
+      } else {
+        startChaos();
+      }
+    });
+
+    function moveButton() {
+      const x = Math.random() * (window.innerWidth - btn.offsetWidth - 20) + 10;
+      const y = Math.random() * (window.innerHeight - btn.offsetHeight - 20) + 10;
+
+      btn.style.transition = 'left 0.2s, top 0.2s';
+      btn.style.left = x + 'px';
+      btn.style.top = y + 'px';
+      btn.style.transform = '';
+
+      // vibrate sedikit ke random arah
+      btn.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+      setTimeout(() => {
+        btn.style.transform = '';
+      }, 100);
     }
-  });
 
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (moveCount < 6) {
-      moveButton();
-      moveCount++;
-    } else {
-      startChaos();
+    function startChaos() {
+      btn.style.display = 'none';
+
+      // Teriakan
+      scream.play();
+
+      // Flash putih kilatan
+      flash.style.opacity = '1';
+      setTimeout(() => {
+        flash.style.opacity = '0';
+      }, 200);
+
+      // Delay sedikit, lalu tampilkan video
+      setTimeout(() => {
+        video.style.display = 'block';
+        video.play();
+      }, 500);
+
+      // Teks berjatuhan selama 30 detik
+      const duration = 30000;
+      const interval = setInterval(() => {
+        showText();
+        createParticle(); // efek api kecil
+      }, 100);
+
+      setTimeout(() => {
+        clearInterval(interval);
+      }, duration);
     }
-  });
 
-  function moveButton() {
-    const x = Math.random() * (window.innerWidth - btn.offsetWidth - 20) + 10;
-    const y = Math.random() * (window.innerHeight - btn.offsetHeight - 20) + 10;
+    function showText() {
+      const text = document.createElement('div');
+      text.className = 'text';
+      text.innerText = 'KICAU MANIA 🐦🔥';
 
-    btn.style.transition = 'left 0.2s, top 0.2s';
-    btn.style.left = x + 'px';
-    btn.style.top = y + 'px';
-    btn.style.transform = '';
-  }
+      text.style.left = Math.random() * window.innerWidth + 'px';
+      text.style.top = Math.random() * window.innerHeight + 'px';
 
-  function startChaos() {
-    btn.style.display = 'none';
-    scream.play();
-
-    flash.style.opacity = '1';
-    setTimeout(() => flash.style.opacity = '0', 200);
-
-    setTimeout(() => {
-      video.style.display = 'block';
-      video.play();
-    }, 500);
-
-    const duration = 30000;
-    const interval = setInterval(() => {
-      showText();
-      createParticle();
-    }, 100);
-
-    setTimeout(() => clearInterval(interval), duration);
-  }
-
-  function showText() {
-    const text = document.createElement('div');
-    text.className = 'text';
-    text.innerText = 'KICAU MANIA 🐦🔥';
-
-    text.style.left = Math.random() * window.innerWidth + 'px';
-    text.style.top = Math.random() * window.innerHeight + 'px';
-
-    document.body.appendChild(text);
-    setTimeout(() => text.remove(), 800);
-  }
-
-  function createParticle() {
-    const p = document.createElement('div');
-    p.className = 'particle';
-
-    const x = Math.random() * window.innerWidth;
-    const y = Math.random() * 200 + 50;
-
-    p.style.left = x + 'px';
-    p.style.top = y + 'px';
-
-    document.body.appendChild(p);
-
-    let vy = 2 + Math.random() * 3;
-    let vx = (Math.random() - 0.5) * 6;
-    let opacity = 0.8;
-
-    const animate = () => {
-      const top = parseFloat(p.style.top);
-      const left = parseFloat(p.style.left);
-
-      if (top > window.innerHeight || opacity < 0) {
-        p.remove();
-        return;
+      // acak warna dan rotasi
+      if (Math.random() > 0.5) {
+        text.style.color = '#ff6600';
+        text.style.textShadow = '0 0 10px #ff6600, 0 0 20px #ff6600, 0 0 30px #ff0000';
+      } else {
+        text.style.color = '#cc00ff';
+        text.style.textShadow = '0 0 10px #cc00ff, 0 0 20px #cc00ff, 0 0 30px #ff00ff';
       }
 
-      opacity -= 0.01;
-      p.style.top = (top + vy) + 'px';
-      p.style.left = (left + vx) + 'px';
-      p.style.opacity = opacity;
+      document.body.appendChild(text);
 
-      vy += 0.1;
+      setTimeout(() => {
+        text.remove();
+      }, 800);
+    }
+
+    function createParticle() {
+      const p = document.createElement('div');
+      p.className = 'particle';
+
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * 200 + 50; // dari atas
+
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+
+      // gerak jatuh dan hilang
+      document.body.appendChild(p);
+
+      let vy = 2 + Math.random() * 3;
+      let vx = (Math.random() - 0.5) * 6;
+      let opacity = 0.8;
+
+      const animate = () => {
+        const top = parseFloat(p.style.top);
+        const left = parseFloat(p.style.left);
+
+        if (top > window.innerHeight || opacity < 0) {
+          p.remove();
+          return;
+        }
+
+        opacity -= 0.01;
+        p.style.top = (top + vy) + 'px';
+        p.style.left = (left + vx) + 'px';
+        p.style.opacity = opacity;
+
+        vy += 0.1;
+        requestAnimationFrame(animate);
+      };
+
       requestAnimationFrame(animate);
-    };
-
-    requestAnimationFrame(animate);
-  }
-</script>
-
+    }
+  </script>
 </body>
 </html>
