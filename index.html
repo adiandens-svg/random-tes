@@ -121,6 +121,17 @@
       pointer-events: none;
       z-index: 15;
     }
+
+    /* Credit di pojok kanan bawah */
+    .credit {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      font-family: Arial, sans-serif;
+      color: rgba(255, 255, 255, 0.6);
+      z-index: 100;
+    }
   </style>
 </head>
 <body>
@@ -130,6 +141,7 @@
   <video id="video" src="kicau.mp4" loop></video>
   <audio id="scream" src="teriak.mp3"></audio>
   <div id="flash"></div>
+  <div class="credit">Created by: ribiamalia</div>
 
   <script>
     const btn = document.getElementById('btn');
